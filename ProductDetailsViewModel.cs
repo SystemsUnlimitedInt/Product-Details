@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -10,6 +10,8 @@ using Xamarin.Forms.BehaviorsPack;
 using System;
 using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 
 namespace App2.ViewModels
 {
@@ -21,82 +23,75 @@ namespace App2.ViewModels
         private string _productname;
         public string QuantityNew1 = string.Empty;
 
-        private ICommand _quantityaddCommand;
 
-        public ICommand QuantityAddCommand
+
+
+
+
+        public ObservableCollection<ProductDetail> Items { get; set; }
+
+        public ICommand QuantityAddCommand { get; set; }
+        public ICommand QuantityMinusCommand { get; set; }
+
+        public ProductDetailsViewModel(string productparamter)
         {
-            get
-            {
-                if (_quantityaddCommand == null)
+            _productname = productparamter;
+            Items = new ObservableCollection<ProductDetail>();
+            Items.Add(new ProductDetail { Name = "Product1", Quantity = "30", QuantityOld = "10", QuantityNew = "0" });
+            Items.Add(new ProductDetail { Name = "Product1", Quantity = "40", QuantityOld = "10", QuantityNew = "0" });
+            Items.Add(new ProductDetail { Name = "Product1", Quantity = "50", QuantityOld = "10", QuantityNew = "0" });
+
+            QuantityAddCommand = new Command((object item) => {
+
+                if (item != null && item is ProductDetail)
                 {
-                    _quantityaddCommand = new Command<ProductDetail>(async (productdetail) =>
-                    {
-                        await OnQuantityAddSelected(productdetail);
-                    });
+                    ProductDetail productdetail = (ProductDetail)item;
+                    productdetail.Quantity = (Convert.ToInt32(productdetail.QuantityOld) + Convert.ToInt32(1)).ToString();
+                    productdetail.QuantityOld = productdetail.Quantity;
+
                 }
+            });
 
-                return _quantityaddCommand;
-            }
-        }
-
-
-
-        private async Task OnQuantityAddSelected(ProductDetail productdetail)
-        {
-            productdetail.Quantity = (Convert.ToInt32(productdetail.QuantityOld) + Convert.ToInt32(1)).ToString();
-            productdetail.QuantityOld = productdetail.Quantity;
-
-            OnPropertyChanged(productdetail.QuantityOld);
-            RefreshCanExcutes();
-            
-        }
-
-        
-
-        private ICommand _quantityminusCommand;
-
-        public ICommand QuantityMinusCommand
-        {
-            get
-            {
-                if (_quantityminusCommand == null)
+            QuantityMinusCommand = new Command((object item) => {
+                if (item != null && item is ProductDetail)
                 {
-                    _quantityminusCommand = new Command<ProductDetail>(async (productdetail) =>
+
+                    ProductDetail productdetail = (ProductDetail)item;
+
+                    if (productdetail.Quantity != "0")
                     {
-                        await OnQuantityMinusSelected(productdetail);
-                    });
+                        productdetail.Quantity = (Convert.ToInt32(productdetail.QuantityOld) - Convert.ToInt32(1)).ToString();
+                        productdetail.QuantityOld = productdetail.Quantity;
+
+                    }
                 }
-
-                return _quantityminusCommand;
-            }
+            });
+            LoadProductDetails();
         }
 
 
-
-        private async Task OnQuantityMinusSelected(ProductDetail productdetail)
+        bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
-            if (productdetail.Quantity != "0")
-            {
-
-
-                productdetail.Quantity = (Convert.ToInt32(productdetail.QuantityOld) - Convert.ToInt32(1)).ToString();
-                productdetail.QuantityOld = productdetail.Quantity;
-
-                OnPropertyChanged("productdetail.QuantityOld");
-                RefreshCanExcutes();
-
-            }
-
-
+            if (Object.Equals(storage, value))
+                return false;
+            storage = value;
+            OnPropertyChanged(propertyName);
+            return true;
         }
-
-
-        private void RefreshCanExcutes()
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            (QuantityAddCommand as Command).ChangeCanExecute();
-            (QuantityMinusCommand as Command).ChangeCanExecute();
-            
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        public event PropertyChangedEventHandler PropertyChanged;
+    
+
+
+
+
+
+
+
+    
 
         public string ProductName
         {
@@ -104,11 +99,11 @@ namespace App2.ViewModels
             set { _productname = value; }
         }
 
-        public ProductDetailsViewModel(string productparamter)
-        {
-            _productname = productparamter;
+        //public ProductDetailsViewModel(string productparamter)
+        //{
+        //    _productname = productparamter;
             
-        }
+        //}
 
 
         
@@ -261,20 +256,6 @@ namespace App2.ViewModels
                 transaction.Commit();
                 con.Close();
             }
-
-           
-
-
-                
-                //DisplayAlert("Successful", "Registration successful!", "OK");
-
-                //NewName.Text = "";
-                //NewSurname.Text = "";
-                //NewEmail.Text = "";
-                //NewPhysicalAddress.Text = "";
-                //NewCellphoneNumber.Text = "";
-                //NewPassword.Text = "";
-                //EmailCheck.Text = "";
             
          
         }
