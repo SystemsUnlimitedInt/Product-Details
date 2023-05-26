@@ -164,7 +164,7 @@ namespace App2.ViewModels
 
 
             // Connect to the database
-            using (MySqlConnection connection = new MySqlConnection("server=vps49.heliohost.us;Port=3306;user id=woofwishlist_woofwishlist;password=Sui@951!!;database=woofwishlist_vetapp"))
+            using (MySqlConnection connection = new MySqlConnection("MySQL string"))
             {
                 connection.Open();
 
