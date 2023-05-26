@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="App2.Views.ProductDetails"
              BackgroundColor="#646464"
              >
-
+ 
     <StackLayout Padding="10">
         
         <Label x:Name="txtOrderNumber" IsVisible="false"/>
@@ -24,20 +24,22 @@
                                 <Label Text="{Binding Price}" Margin="10,10,10,10" FontSize="25" FontAttributes="Bold" TextColor="#99b4d1" />
                                 <Label Text="{Binding Price1}" IsVisible="false"/>
                                 <StackLayout Orientation="Horizontal">
-                                    <Button
-                                        x:Name="minusbutton"
-                                        ImageSource="minus.png" 
+                                    <Button    
+                                        x:Name="minusbutton" Text="minus"
                                         Command="{Binding Source={x:Reference productdetailsCollectionView}, Path=BindingContext.QuantityMinusCommand}"
                                         CommandParameter="{Binding .}"
                                         BackgroundColor="Transparent"/>
-                                    <Entry Text="{Binding Quantity}"/>
-                                    <Entry Text="{Binding QuantityOld}"/>
-                                    <Entry Text="{Binding QuantityNew, Mode=TwoWay}"/>
-                                    <Button
+                                    <Entry x:Name="txtQuantity" IsReadOnly="True" Text="{Binding Quantity}" />
+
+                                    <Entry x:Name="txtQuantityOld" IsReadOnly="True" Text="{Binding QuantityOld}" />
+
+                                    <Entry Text="{Binding QuantityNew}"/>
+                                    <Button   Text="add"
                                         ImageSource="Plus.png"
                                         Command="{Binding Source={x:Reference productdetailsCollectionView}, Path=BindingContext.QuantityAddCommand}"
                                         CommandParameter="{Binding .}"
                                         BackgroundColor="Transparent"/>
+
                                 </StackLayout>
                                 <Button
                                     Command="{Binding Source={x:Reference productdetailsCollectionView}, Path=BindingContext.ProductDetailsCommand}" 
