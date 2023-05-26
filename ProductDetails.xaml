@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="App2.Views.ProductDetails"
+             BackgroundColor="#646464"
+             >
+
+    <StackLayout Padding="10">
+        
+        <Label x:Name="txtOrderNumber" IsVisible="false"/>
+        <CollectionView x:Name="productdetailsCollectionView" ItemsSource="{Binding ProductDetails}" >
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="1" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="CenterAndExpand" Margin="0" Padding="7" >
+                        <Frame HasShadow="False" BorderColor="Black"  BackgroundColor="Transparent" CornerRadius="20">
+                            <StackLayout Padding="5">
+                                <Image Source="{Binding ImageUrl}" HeightRequest="200" />
+                                <Label Text="{Binding Name}" FontSize="30" FontAttributes="Bold" HorizontalTextAlignment="Center" TextColor="Black" Padding="10" />
+                                <Label Text="About This Product" FontSize="20" FontAttributes="Bold" Margin="10,10,5,-15" TextColor="#99b4d1"/>
+                                <Label Text="{Binding ProductDetails}" Margin="10,10,10,10" FontSize="15" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" TextColor="White"/>
+                                <Label Text="{Binding Price}" Margin="10,10,10,10" FontSize="25" FontAttributes="Bold" TextColor="#99b4d1" />
+                                <Label Text="{Binding Price1}" IsVisible="false"/>
+                                <StackLayout Orientation="Horizontal">
+                                    <Button
+                                        x:Name="minusbutton"
+                                        ImageSource="minus.png" 
+                                        Command="{Binding Source={x:Reference productdetailsCollectionView}, Path=BindingContext.QuantityMinusCommand}"
+                                        CommandParameter="{Binding .}"
+                                        BackgroundColor="Transparent"/>
+                                    <Entry Text="{Binding Quantity}"/>
+                                    <Entry Text="{Binding QuantityOld}"/>
+                                    <Entry Text="{Binding QuantityNew, Mode=TwoWay}"/>
+                                    <Button
+                                        ImageSource="Plus.png"
+                                        Command="{Binding Source={x:Reference productdetailsCollectionView}, Path=BindingContext.QuantityAddCommand}"
+                                        CommandParameter="{Binding .}"
+                                        BackgroundColor="Transparent"/>
+                                </StackLayout>
+                                <Button
+                                    Command="{Binding Source={x:Reference productdetailsCollectionView}, Path=BindingContext.ProductDetailsCommand}" 
+                                    CommandParameter="{Binding .}"
+                                    Text="ADD TO CART"
+                                    CornerRadius="20"
+                                    BackgroundColor="Transparent"
+                                    BorderColor="ForestGreen"
+                                    BorderWidth="1.5"
+                                    TextColor="White"/>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        
+    </StackLayout>
+
+</ContentPage>
